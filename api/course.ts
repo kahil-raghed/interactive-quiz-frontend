@@ -8,10 +8,13 @@ export interface CreateCourseRequest
   extends Pick<Course, "name" | "year" | "semester"> {}
 
 export const findCourse = (query?: CourseQuery, req?: AxiosRequestConfig) =>
-  axios.get(`${ApiBase}/v1/course`, {
+  axios.get<Course[]>(`${ApiBase}/v1/course`, {
     ...req,
     params: query,
   });
+
+export const getCourseById = (id: string, req?: AxiosRequestConfig) =>
+  axios.get<Course>(`${ApiBase}/v1/course/${id}`, req);
 
 export const createCourse = (
   data: CreateCourseRequest,

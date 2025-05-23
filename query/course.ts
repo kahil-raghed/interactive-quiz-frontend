@@ -1,10 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CourseQuery, deleteCourse, findCourse } from "../api/course";
+import {
+  CourseQuery,
+  deleteCourse,
+  findCourse,
+  getCourseById,
+} from "../api/course";
+import { Course } from "../types/course";
 
-export const useCourses = (query?: CourseQuery) => {
+export const useCourses = (query?: CourseQuery, initialData?: Course[]) => {
   return useQuery({
     queryKey: ["courses", query ?? {}],
-    queryFn: () => findCourse(query).then((res) => res.data),
+    queryFn: ({ signal }) =>
+      findCourse(query, { signal }).then((res) => res.data),
+    initialData,
+  });
+};
+
+export const useCourseById = (id: string, initialData?: Course) => {
+  return useQuery({
+    queryKey: ["course", id],
+    queryFn: ({ signal }) =>
+      getCourseById(id, { signal }).then((res) => res.data),
+    initialData,
   });
 };
 
