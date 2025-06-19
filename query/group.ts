@@ -1,12 +1,30 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { GroupQuery, deleteGroup, findGroup } from "../api/group";
-import { Group } from "../types/group";
+import {
+  FindGroupResponse,
+  GetGroupResponse,
+  GroupQuery,
+  deleteGroup,
+  findGroup,
+  getGroupById,
+} from "../api/group";
 
-export const useGroups = (query?: GroupQuery, initialData?: Group[]) => {
+export const useGroups = (
+  query?: GroupQuery,
+  initialData?: FindGroupResponse
+) => {
   return useQuery({
     queryKey: ["groups", query ?? {}],
     queryFn: ({ signal }) =>
       findGroup(query, { signal }).then((res) => res.data),
+    initialData,
+  });
+};
+
+export const useGetGroupById = (id: string, initialData?: GetGroupResponse) => {
+  return useQuery({
+    queryKey: ["groups", id],
+    queryFn: ({ signal }) =>
+      getGroupById(id, { signal }).then((res) => res.data),
     initialData,
   });
 };

@@ -5,6 +5,7 @@ import "./math.scss";
 import { Providers } from "./_components/Providers";
 import { Toaster } from "sonner";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

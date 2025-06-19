@@ -19,7 +19,7 @@ export default async function CoursePage($: {
   return (
     <div>
       <h1 className="text-2xl mb-4">{course.name}</h1>
-      <CoursePageClient course={course} />
+      <CoursePageClient course={course} groups={groups} />
     </div>
   );
 }

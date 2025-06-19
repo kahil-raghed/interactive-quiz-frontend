@@ -26,6 +26,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { AppBase } from "@/config/app"
 
 // This is sample data.
 const data = {
@@ -37,7 +38,7 @@ const data = {
   projects: [
     {
       name: "Courses",
-      url: "/courses",
+      url: `${AppBase}/courses`,
       icon: BookMarked,
     },
     {

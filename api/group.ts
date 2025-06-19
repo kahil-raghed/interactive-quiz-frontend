@@ -1,20 +1,32 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { ApiBase } from "../config/api";
 import { Group } from "../types/group";
+import { Course } from "@/types/course";
 
 export interface GroupQuery extends Partial<Group> {}
 
-export interface CreateGroupRequest
-  extends Pick<Group, "name" | "year" | "course" | "students"> {}
+export type FindGroupResponse = GroupSummary[];
+
+export interface GetGroupResponse extends Omit<Group, "course"> {
+  course: Course;
+}
+
+export interface CreateGroupRequest extends Pick<Group, "name"> {}
+
+export interface GroupSummary {
+  _id: string;
+  name: string;
+  studentCount: number;
+}
 
 export const findGroup = (query?: GroupQuery, req?: AxiosRequestConfig) =>
-  axios.get<Group[]>(`${ApiBase}/v1/group`, {
+  axios.get<FindGroupResponse>(`${ApiBase}/v1/group`, {
     ...req,
     params: query,
   });
 
 export const getGroupById = (id: string, req?: AxiosRequestConfig) =>
-  axios.get<Group>(`${ApiBase}/v1/group/${id}`, req);
+  axios.get<GetGroupResponse>(`${ApiBase}/v1/group/${id}`, req);
 
 export const createGroup = (
   data: CreateGroupRequest,
