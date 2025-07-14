@@ -9,8 +9,6 @@ import {
 import { useForm } from "react-hook-form";
 import { MathField } from "../../../components/ui/math-field";
 import { z } from "zod";
-import { useState } from "react";
-import { MathElement } from "../../../components/ui/math-element";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -21,12 +19,6 @@ import {
 } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Separator } from "../../../components/ui/separator";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../../components/ui/accordion";
 import { Button } from "../../../components/ui/button";
 
 const formSchema = z.object({

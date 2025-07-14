@@ -1,6 +1,10 @@
 import { BaseEntity } from "./base";
 
 export interface Student extends BaseEntity {
-  name: string;
   studentNumber: string;
+  name: string;
+  email: string;
+  year: string;
+  password: string;
+  userType: "student";
 }
