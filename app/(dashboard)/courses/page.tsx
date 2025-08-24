@@ -2,7 +2,7 @@
 
 import { Course } from "@/types/course";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataTable } from "../../../components/data-table";
 import { useCourses, useDeleteCourseMutation } from "../../../query/course";
 import { Separator } from "@radix-ui/react-separator";
@@ -17,15 +17,23 @@ import { CourseForm } from "./_components/course-form";
 import Link from "next/link";
 import { Edit, Trash } from "lucide-react";
 import { isAdmin } from "@/lib/token";
+import { TableFilter } from "@/components/table-filter";
+import { FormProvider, useForm } from "react-hook-form";
 
 export default function Courses() {
-  const { data, isLoading } = useCourses();
+  const form = useForm();
+  const { data, isLoading } = useCourses(form.watch());
+  const [admin, setAdmin] = useState(false);
   const [courseDialog, setCourseDialog] = useState<{
     open: boolean;
     course?: Course;
   } | null>(null);
 
   const { mutateAsync: deleteCourse } = useDeleteCourseMutation();
+
+  useEffect(() => {
+    setAdmin(isAdmin());
+  }, []);
 
   const deleting = useRef(new Set<string>());
   const deleteCourseFn = useCallback(
@@ -62,7 +70,7 @@ export default function Courses() {
         size: 50,
         cell: (c) => (
           <div className="flex gap-2">
-            {isAdmin() && (
+            {admin && (
               <>
                 <Button
                   size="icon"
@@ -92,9 +100,9 @@ export default function Courses() {
   }, [deleting]);
 
   return (
-    <div>
+    <FormProvider {...form}>
       <div className="flex justify-end mb-4">
-        {isAdmin() && (
+        {admin && (
           <Dialog
             open={courseDialog?.open ?? false}
             onOpenChange={(open) =>
@@ -118,8 +126,37 @@ export default function Courses() {
           </Dialog>
         )}
       </div>
+
       <Separator />
-      <DataTable columns={columns} data={data} isLoading={isLoading} />
-    </div>
+
+      <TableFilter
+        filters={[
+          { label: "Name", name: "name", type: "text" },
+          {
+            label: "Year",
+            name: "year",
+            type: "select",
+            options: [
+              { label: "First Year", value: "1" },
+              { label: "Second Year", value: "2" },
+              { label: "Third Year", value: "3" },
+              { label: "Fourth Year", value: "4" },
+              { label: "Fifth Year", value: "5" },
+            ],
+          },
+          {
+            label: "Semester",
+            name: "semester",
+            type: "select",
+            options: [
+              { label: "First Semester", value: "1" },
+              { label: "Second Semester", value: "2" },
+            ],
+          },
+        ]}
+      />
+
+      <DataTable columns={columns} data={data ?? []} isLoading={isLoading} />
+    </FormProvider>
   );
 }

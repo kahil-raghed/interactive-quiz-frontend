@@ -7,9 +7,12 @@ import {
 } from "../api/course";
 import { Course } from "../types/course";
 
-export const useCourses = (query?: CourseQuery, initialData?: Course[]) => {
+export const useCourses = (
+  query?: Partial<CourseQuery>,
+  initialData?: Course[]
+) => {
   return useQuery({
-    queryKey: ["courses", query ?? {}],
+    queryKey: ["courses", query],
     queryFn: ({ signal }) =>
       findCourse(query, { signal }).then((res) => res.data),
     initialData,

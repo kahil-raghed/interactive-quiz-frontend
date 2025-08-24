@@ -1,4 +1,8 @@
-function parseJwt(token: string) {
+export function parseJwt(token: string) {
+  if (!token) {
+    return {};
+  }
+
   var base64Url = token?.split(" ")[1].split(".")[1];
   var base64 = base64Url?.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = decodeURIComponent(
@@ -15,9 +19,11 @@ function parseJwt(token: string) {
 }
 
 export const isAdmin = () => {
-  console.log(parseJwt(localStorage.getItem("token") as string));
+  // console.log(parseJwt(localStorage.getItem("token") as string));
 
-  if (parseJwt(localStorage.getItem("token") as string).role === "admin") {
+  if (
+    parseJwt((localStorage.getItem("token") as string) ?? "").role === "admin"
+  ) {
     return true;
   }
 

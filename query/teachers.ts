@@ -1,11 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTeacher, deleteTeacher, getTeachers } from "@/api/teachers";
+import {
+  createTeacher,
+  deleteTeacher,
+  getTeachers,
+  TeacherQuery,
+} from "@/api/teachers";
 import { Teacher } from "@/types/teacher";
 
-export const useTeachers = (initialData?: Teacher[]) => {
+export const useTeachers = (
+  query?: Partial<TeacherQuery>,
+  initialData?: Teacher[]
+) => {
   return useQuery({
-    queryKey: ["teachers"],
-    queryFn: ({ signal }) => getTeachers({ signal }).then((res) => res.data),
+    queryKey: ["teachers", { ...query }],
+    queryFn: ({ signal }) =>
+      getTeachers(query, { signal }).then((res) => res.data),
     initialData,
   });
 };

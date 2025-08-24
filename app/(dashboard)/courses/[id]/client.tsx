@@ -55,7 +55,7 @@ export default function CoursePageClient($: {
           <Button>New Group</Button>
         </div>
       </div>
-      <DataTable columns={columns} data={groups} isLoading={isLoading} />
+      <DataTable columns={columns} data={groups ?? []} isLoading={isLoading} />
     </div>
   );
 }

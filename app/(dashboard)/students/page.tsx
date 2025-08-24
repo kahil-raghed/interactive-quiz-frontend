@@ -1,12 +1,8 @@
 "use client";
 
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Student } from "@/app/types/student";
-import TanTable from "@/components/tan-table";
-// import { findAllStudents } from "@/lib/api/student";
+import { createColumnHelper } from "@tanstack/react-table";
 import { useStudents } from "@/query/student";
 import { deleteStudent } from "@/api/student";
-import { Course } from "@/types/course";
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,19 +10,23 @@ import { Edit, Trash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/data-table";
 import { StudentForm } from "./_components/student-form";
+import { Student } from "@/types/student";
+import { TableFilter } from "@/components/table-filter";
+import { FormProvider, useForm } from "react-hook-form";
 
 export default function StudentsPage() {
-  // const students = await findAllStudents();
+  const form = useForm();
   const { data, isLoading } = useStudents();
   const [studentDialog, setStudentDialog] = useState<{
     open: boolean;
-    course?: Course;
+    student?: Student;
   } | null>(null);
 
   const deleting = useRef(new Set<string>());
@@ -41,7 +41,7 @@ export default function StudentsPage() {
   );
 
   const columns = useMemo(() => {
-    const h = createColumnHelper<Course>();
+    const h = createColumnHelper<Student>();
 
     return [
       h.accessor("name", {
@@ -52,11 +52,11 @@ export default function StudentsPage() {
           </Link>
         ),
       }),
-      h.accessor("year", {
-        header: "Year",
+      h.accessor("email", {
+        header: "Email",
       }),
-      h.accessor("semester", {
-        header: "Semester",
+      h.accessor("studentNumber", {
+        header: "Student Number",
       }),
       h.display({
         id: "actions",
@@ -66,12 +66,12 @@ export default function StudentsPage() {
           <div className="flex gap-2">
             <Button
               size="icon"
-              // onClick={() => {
-              //   setCourseDialog({
-              //     open: true,
-              //     course: c.row.original,
-              //   });
-              // }}
+              onClick={() => {
+                setStudentDialog({
+                  open: true,
+                  student: c.row.original,
+                });
+              }}
             >
               <Edit />
             </Button>
@@ -90,13 +90,13 @@ export default function StudentsPage() {
   }, [deleting]);
 
   return (
-    <div>
+    <FormProvider {...form}>
       <div className="flex justify-end mb-4">
         <Dialog
           open={studentDialog?.open ?? false}
           onOpenChange={(open) =>
             setStudentDialog(
-              open ? { open: open, course: studentDialog?.course } : null
+              open ? { open: open, student: studentDialog?.student } : null
             )
           }
         >
@@ -106,7 +106,7 @@ export default function StudentsPage() {
           <DialogContent>
             <DialogTitle>Add Student</DialogTitle>
             <StudentForm
-              course={studentDialog?.course}
+              student={studentDialog?.student}
               onSuccess={() => {
                 setStudentDialog(null);
               }}
@@ -115,7 +115,18 @@ export default function StudentsPage() {
         </Dialog>
       </div>
       <Separator />
-      <DataTable columns={columns} data={data} isLoading={isLoading} />
-    </div>
+      <TableFilter
+        filters={[
+          { label: "Student Number", name: "student_number", type: "text" },
+          { label: "Email", name: "email", type: "text" },
+          { label: "Name", name: "name", type: "text" },
+        ]}
+      />
+      <DataTable
+        columns={columns}
+        data={data ?? []} // Ensure data is always an array
+        isLoading={isLoading}
+      />
+    </FormProvider>
   );
 }

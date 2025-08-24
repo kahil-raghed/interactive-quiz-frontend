@@ -1,6 +1,7 @@
 "use client";
+
 import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,13 +10,19 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useDeleteGroupMutation, useGroups } from "@/query/group";
-import { Group } from "@/types/group";
+import { Group, GroupQuery } from "@/types/group";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Trash } from "lucide-react";
+import { Edit, Trash, User } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { GroupForm } from "./_components/group-form";
+import { TableFilter } from "@/components/table-filter";
+import { FormProvider, useForm } from "react-hook-form";
+import Link from "next/link";
 
 export default function Groups() {
-  const { data } = useGroups();
+  const form = useForm<GroupQuery>();
+  const { data } = useGroups(form.watch());
+
   const { mutateAsync: deleteGroup } = useDeleteGroupMutation();
   const [groupDialog, setGroupDialog] = useState<{
     open: boolean;
@@ -42,10 +49,10 @@ export default function Groups() {
         header: "Name",
       }),
       h.accessor("course.name", {
-        header: "Name",
+        header: "Course",
       }),
-      h.accessor("year", {
-        header: "year",
+      h.accessor("teacher.name", {
+        header: "Teacher",
       }),
       h.display({
         id: "actions",
@@ -53,17 +60,28 @@ export default function Groups() {
         size: 50,
         cell: (c) => (
           <div className="flex gap-2">
-            {/* <Button
+            <Link
+              href={"groups/" + c.row.original._id}
+              className={buttonVariants({
+                size: "icon",
+                variant: "secondary",
+              })}
+            >
+              <User />
+            </Link>
+
+            <Button
               size="icon"
               onClick={() => {
-                setTeacherDialog({
+                setGroupDialog({
                   open: true,
-                  teacher: c.row.original,
+                  group: c.row.original,
                 });
               }}
             >
               <Edit />
-            </Button> */}
+            </Button>
+
             <Button
               size="icon"
               variant="destructive"
@@ -79,7 +97,7 @@ export default function Groups() {
   }, [deleting]);
 
   return (
-    <div>
+    <FormProvider {...form}>
       <div className="flex justify-end mb-4">
         <Dialog
           open={groupDialog?.open ?? false}
@@ -94,17 +112,25 @@ export default function Groups() {
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Add Group</DialogTitle>
-            {/* <TeacherForm
-              teacher={teacherDialog?.teacher}
+            <GroupForm
+              group={groupDialog?.group}
               onSuccess={() => {
-                setTeacherDialog(null);
+                setGroupDialog(null);
               }}
-            /> */}
+            />
           </DialogContent>
         </Dialog>
       </div>
       <Separator />
-      <DataTable columns={columns} data={data} isLoading={false} />
-    </div>
+
+      <TableFilter
+        filters={[
+          { label: "teacher ID", name: "teacher-id", type: "text" },
+          { label: "course ID", name: "course-id", type: "text" },
+          { label: "Name", name: "name", type: "text" },
+        ]}
+      />
+      <DataTable columns={columns} data={data ?? []} isLoading={false} />
+    </FormProvider>
   );
 }

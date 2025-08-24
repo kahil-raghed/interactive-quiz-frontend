@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/table";
 import React, { forwardRef, Ref, useCallback } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Skeleton } from "./ui/skeleton";
 
 interface DataTableProps<TData> {
@@ -34,9 +33,9 @@ interface DataTableProps<TData> {
   isLoading?: boolean;
 }
 
-export const DataTable = <TData, >({
+export const DataTable = <TData,>({
   columns,
-  data,
+  data = [], // Default to empty array
   tableRef,
   isLoading,
 }: DataTableProps<TData>) => {
@@ -49,7 +48,7 @@ export const DataTable = <TData, >({
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: data ?? [],
+    data, // Use defaulted data
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -68,10 +67,10 @@ export const DataTable = <TData, >({
   });
 
   useCallback(() => {
-    if (typeof tableRef == "function") {
+    if (typeof tableRef === "function") {
       tableRef(table);
     } else if (tableRef) {
-      tableRef.current = table;
+      (tableRef as React.MutableRefObject<TanTable<TData>>).current = table;
     }
   }, [table]);
 
@@ -82,18 +81,20 @@ export const DataTable = <TData, >({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan} style={{width: header.getSize()}}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{ width: header.getSize() }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -101,7 +102,7 @@ export const DataTable = <TData, >({
             {isLoading ? (
               <TableRow>
                 {table.getLeafHeaders().map((header) => (
-                  <TableCell key={header.id} colSpan={header.colSpan} className="">
+                  <TableCell key={header.id} colSpan={header.colSpan}>
                     <Skeleton className="h-4 w-20" />
                   </TableCell>
                 ))}

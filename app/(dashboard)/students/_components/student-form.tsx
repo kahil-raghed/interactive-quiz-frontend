@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { Student } from "../../../../types/student";
 import {
   Form,
-  FormControl,
-  FormDescription,
+  // FormControl,
+  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,38 +13,38 @@ import {
 } from "../../../../components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
 import { Input } from "../../../../components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { createStudent, updateStudent } from "../../../../api/student";
 import { Button } from "../../../../components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
+// import { useCallback } from "react";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
 const formSchema = z.object({
   studentNumber: z.string().min(1, { message: "Student Number is required" }),
   name: z.string().min(1, { message: "Name is required" }),
-  year: z.string().min(1, { message: "Year is required" }),
+  // year: z.string().min(1, { message: "Year is required" }),
   email: z.string().min(1, { message: "Email is required" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
 export const StudentForm = ($: {
-  onSuccess?: (course: Student) => void;
+  onSuccess?: (student: Student) => void;
   student?: Partial<Student>;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      year: "1",
+      // year: "1",
       ...$.student,
     },
   });
@@ -60,7 +60,9 @@ export const StudentForm = ($: {
       );
       form.reset();
     } else {
-      res = await updateStudent($.course?._id!, values).then((res) => res.data);
+      res = await updateStudent($.student?._id!, values).then(
+        (res) => res.data
+      );
     }
 
     toast("Course saved", {
@@ -113,7 +115,7 @@ export const StudentForm = ($: {
           )}
         />
 
-        <FormField
+        {/* <FormField
           name="year"
           control={form.control}
           render={({ field }) => (
@@ -138,7 +140,7 @@ export const StudentForm = ($: {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           name="password"

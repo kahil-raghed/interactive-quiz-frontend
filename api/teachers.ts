@@ -3,13 +3,20 @@ import { ApiBase } from "../config/api";
 import { Teacher } from "../types/teacher";
 import { axiosInstance } from "./axios";
 
-export interface TeacherQuery extends Partial<Teacher> {}
+export interface TeacherQuery {
+  name: string;
+  email: string;
+}
 
 export interface CreateTeacherRequest extends Pick<Teacher, "name" | "email"> {}
 
-export const getTeachers = (req?: AxiosRequestConfig) =>
+export const getTeachers = (
+  query?: Partial<TeacherQuery>,
+  req?: AxiosRequestConfig
+) =>
   axiosInstance.get<Teacher[]>(`${ApiBase}/api/v1/teachers`, {
     ...req,
+    params: query,
   });
 export const createTeacher = (
   data: CreateTeacherRequest,

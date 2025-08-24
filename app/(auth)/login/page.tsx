@@ -26,8 +26,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { useLoginMutation } from "@/query/login";
+// import { isAdmin, parseJwt } from "@/lib/token";
 
 // Schema for form validation
 const loginSchema = z.object({
@@ -40,7 +41,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
+  // const router = useRouter();
 
   // Form setup with react-hook-form & Zod
   const form = useForm<LoginFormValues>({
@@ -58,7 +59,10 @@ export default function LoginPage() {
 
   const onSubmit = (values: LoginFormValues) => {
     loginUser(
-      { data: values, role: values.role },
+      {
+        data: { email: values.email, password: values.password },
+        role: values.role,
+      },
       {
         onSuccess: (data: { jwtToken: string }) => {
           localStorage.setItem("token", data.jwtToken);

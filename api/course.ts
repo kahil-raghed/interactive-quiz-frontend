@@ -3,12 +3,19 @@ import { ApiBase } from "../config/api";
 import { Course } from "../types/course";
 import { axiosInstance } from "./axios";
 
-export interface CourseQuery extends Partial<Course> {}
+export interface CourseQuery {
+  name: string;
+  year: string;
+  semester: string;
+}
 
 export interface CreateCourseRequest
   extends Pick<Course, "name" | "year" | "semester"> {}
 
-export const findCourse = (query?: CourseQuery, req?: AxiosRequestConfig) =>
+export const findCourse = (
+  query?: Partial<CourseQuery>,
+  req?: AxiosRequestConfig
+) =>
   axiosInstance.get<Course[]>(`${ApiBase}/api/v1/course`, {
     ...req,
     params: query,

@@ -1,5 +1,6 @@
 "use client";
-
+import React from "react";
+import { Admin } from "@/types/admin";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -8,46 +9,49 @@ import {
   FormLabel,
   FormMessage,
 } from "../../../../components/ui/form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
-import { Teacher } from "@/types/teacher";
-import { createTeacher } from "@/api/teachers";
+import { createAdmin } from "@/api/admin";
+import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().min(1, { message: "Email is required" }),
-  password: z.string().length(5, { message: "Password is required" }),
+  email: z.string().email({ message: "Email is required" }),
+  password: z.string().min(5, { message: "Password is required" }),
 });
 
-export const TeacherForm = ($: {
-  onSuccess?: (course: Teacher) => void;
-  teacher?: Partial<Teacher>;
+const AdminForm = ($: {
+  onSuccess?: (onSuccess: Admin) => void;
+  admin?: Partial<Admin>;
 }) => {
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      ...$.teacher,
+      email: "",
+      password: "",
+      ...$.admin,
     },
   });
-  const queryClient = useQueryClient();
 
-  const submit = form.handleSubmit(async (values) => {
-    let res: Teacher;
-    res = await createTeacher(values).then((res) => res.data);
-    form.reset();
+  const submit = form.handleSubmit(async (values: any) => {
+    let res: Admin;
 
-    toast("Teacher saved", {
+    res = await createAdmin(values).then((res) => res.data);
+
+    toast("Admin saved", {
       icon: <Check color="green" />,
       dismissible: true,
     });
+
     queryClient.invalidateQueries({
-      predicate: (query) => query.queryKey[0] === "teachers",
+      predicate: (query) => query.queryKey[0] === "admin",
     });
     $.onSuccess?.(res);
   }, console.error);
@@ -60,7 +64,7 @@ export const TeacherForm = ($: {
           control={form.control}
           render={({ field }) => (
             <FormItem className="mb-2">
-              <FormLabel>Teacher Name</FormLabel>
+              <FormLabel>Admin name</FormLabel>
               <Input placeholder="Name..." {...field} />
               <FormMessage />
             </FormItem>
@@ -72,8 +76,8 @@ export const TeacherForm = ($: {
           control={form.control}
           render={({ field }) => (
             <FormItem className="mb-2">
-              <FormLabel>Email</FormLabel>
-              <Input placeholder="Email..." type="email" {...field} />
+              <FormLabel>Admin Email</FormLabel>
+              <Input placeholder="Email..." {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -84,15 +88,19 @@ export const TeacherForm = ($: {
           control={form.control}
           render={({ field }) => (
             <FormItem className="mb-2">
-              <FormLabel>Password</FormLabel>
-              <Input placeholder="Password..." type="password" {...field} />
+              <FormLabel>Admin Password</FormLabel>
+              <Input type="password" placeholder="Password..." {...field} />
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Save</Button>
+        <Button type="submit" className="w-full">
+          Save
+        </Button>
       </form>
     </Form>
   );
 };
+
+export default AdminForm;

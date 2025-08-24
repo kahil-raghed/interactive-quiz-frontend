@@ -1,3 +1,4 @@
+"use client";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -13,9 +14,25 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { parseJwt } from "@/lib/token";
 
 export default function MainLayout($: PropsWithChildren) {
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      if (
+        !["admin", "teacher", "student"].includes(
+          parseJwt(localStorage.getItem("token") as string).role
+        )
+      ) {
+        router.replace("login");
+      }
+    } catch (error) {}
+  }, [router]);
+
   return (
     <SidebarProvider>
       <AppSidebar />

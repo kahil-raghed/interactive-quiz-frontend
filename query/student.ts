@@ -7,9 +7,12 @@ import {
 } from "../api/student";
 import { Student } from "../types/student";
 
-export const useStudents = (query?: StudentQuery, initialData?: Student[]) => {
+export const useStudents = (
+  query?: Partial<StudentQuery>,
+  initialData?: Student[]
+) => {
   return useQuery({
-    queryKey: ["students", query ?? {}],
+    queryKey: ["students", { ...query }],
     queryFn: ({ signal }) =>
       findStudent(query, { signal }).then((res) => res.data),
     initialData,

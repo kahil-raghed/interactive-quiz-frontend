@@ -13,6 +13,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  UserPlus,
   Group,
 } from "lucide-react";
 
@@ -36,6 +37,11 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   projects: [
+    {
+      name: "Admin",
+      url: "/admin",
+      icon: UserPlus,
+    },
     {
       name: "Courses",
       url: "/courses",
