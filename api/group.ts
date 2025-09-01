@@ -16,14 +16,9 @@ export const getGroupById = (id?: string, req?: AxiosRequestConfig) =>
   axiosInstance.get<Group>(`${ApiBase}/api/v1/group/${id}`, req);
 
 export const createGroup = (
-  data: CreateGroupRequest,
+  data: Pick<Group, "name" | "course">,
   req?: AxiosRequestConfig
-) =>
-  axiosInstance.post<Pick<Group, "name" | "course" | "students" | "teacher">>(
-    `${ApiBase}/api/v1/group`,
-    data,
-    req
-  );
+) => axiosInstance.post(`${ApiBase}/api/v1/group`, data, req);
 
 export const updateGroup = (
   id: string,

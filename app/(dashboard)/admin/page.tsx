@@ -9,9 +9,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Group } from "@/types/group";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { TableFilter } from "@/components/table-filter";
 import { FormProvider, useForm } from "react-hook-form";
 import AdminForm from "./_components/admin-form";
@@ -26,7 +25,7 @@ export default function Page() {
     admin?: Admin;
   } | null>(null);
 
-  const deleting = useRef(new Set<string>());
+  // const deleting = useRef(new Set<string>());
 
   const columns = useMemo(() => {
     const h = createColumnHelper<Admin>();
@@ -39,7 +38,7 @@ export default function Page() {
         header: "Email",
       }),
     ];
-  }, [deleting]);
+  }, []);
 
   return (
     <FormProvider {...form}>

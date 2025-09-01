@@ -20,17 +20,18 @@ import {
 import { Input } from "../../../components/ui/input";
 import { Separator } from "../../../components/ui/separator";
 import { Button } from "../../../components/ui/button";
+import { Controller } from "react-hook-form";
 
 const formSchema = z.object({
   title: z.string().optional(),
   questions: z.array(
     z.object({
-      title: z.string(),
-      content: z.string(),
-      mathEquations: z.array(z.string().optional()),
+      title: z.string().min(1, "Question title is required"),
+      content: z.string().optional(),
+      mathEquations: z.array(z.string().min(1, "Equation cannot be empty")),
       options: z.array(
         z.object({
-          title: z.string(),
+          title: z.string().min(1, "Option title is required"),
           isCorrect: z.boolean(),
         })
       ),
@@ -49,22 +50,10 @@ export default function QuizEditor() {
           content: "",
           mathEquations: [],
           options: [
-            {
-              title: "Option 1",
-              isCorrect: true,
-            },
-            {
-              title: "Option 2",
-              isCorrect: false,
-            },
-            {
-              title: "Option 3",
-              isCorrect: false,
-            },
-            {
-              title: "Option 4",
-              isCorrect: false,
-            },
+            { title: "Option 1", isCorrect: true },
+            { title: "Option 2", isCorrect: false },
+            { title: "Option 3", isCorrect: false },
+            { title: "Option 4", isCorrect: false },
           ],
         },
       ],
@@ -73,7 +62,9 @@ export default function QuizEditor() {
 
   const questions = form.watch("questions");
 
-  const submit = form.handleSubmit(() => {});
+  const submit = form.handleSubmit((values) => {
+    console.log(values);
+  });
 
   return (
     <Card>
@@ -83,7 +74,7 @@ export default function QuizEditor() {
       <Separator />
       <CardContent>
         <Form {...form}>
-          <form action="" onSubmit={submit}>
+          <form onSubmit={submit}>
             <FormField
               name="title"
               control={form.control}
@@ -113,17 +104,30 @@ export default function QuizEditor() {
                       </FormItem>
                     )}
                   />
-                  <div className="">
+                  <div className="flex flex-col">
                     {q.mathEquations.map((eq, eqIx) => (
                       <FormField
                         key={eqIx}
                         name={`questions.${ix}.mathEquations.${eqIx}`}
                         control={form.control}
-                        render={({ field }) => (
+                        render={({}) => (
                           <FormItem className="mb-2">
                             <div className="flex">
-                              <FormLabel className="me-2">Eq{eqIx + 1}:</FormLabel>
-                              <MathField {...field} className="flex-1" />
+                              <FormLabel className="me-2">
+                                Eq{eqIx + 1}:
+                              </FormLabel>
+                              <Controller
+                                control={form.control}
+                                name={`questions.${ix}.mathEquations.${eqIx}`}
+                                render={({ field: controllerField }) => (
+                                  <MathField
+                                    value={controllerField.value}
+                                    onChange={controllerField.onChange}
+                                    name={controllerField.name}
+                                    className="flex-1"
+                                  />
+                                )}
+                              />
                             </div>
                             <FormMessage />
                           </FormItem>
@@ -133,8 +137,11 @@ export default function QuizEditor() {
                     <Button
                       size={"sm"}
                       onClick={() => {
+                        const currentEquations = form.getValues(
+                          `questions.${ix}.mathEquations`
+                        );
                         form.setValue(`questions.${ix}.mathEquations`, [
-                          ...form.getValues(`questions.${ix}.mathEquations`),
+                          ...currentEquations,
                           "",
                         ]);
                       }}
@@ -146,8 +153,28 @@ export default function QuizEditor() {
               ))}
             </div>
             <div className="text-center">
-              <Button>Add Question</Button>
+              <Button
+                onClick={() => {
+                  form.setValue("questions", [
+                    ...form.getValues("questions"),
+                    {
+                      title: "",
+                      content: "",
+                      mathEquations: [],
+                      options: [
+                        { title: "Option 1", isCorrect: true },
+                        { title: "Option 2", isCorrect: false },
+                        { title: "Option 3", isCorrect: false },
+                        { title: "Option 4", isCorrect: false },
+                      ],
+                    },
+                  ]);
+                }}
+              >
+                Add Question
+              </Button>
             </div>
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </CardContent>

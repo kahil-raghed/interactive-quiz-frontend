@@ -38,8 +38,7 @@ export const TeacherForm = ($: {
   const queryClient = useQueryClient();
 
   const submit = form.handleSubmit(async (values) => {
-    let res: Teacher;
-    res = await createTeacher(values).then((res) => res.data);
+    const res = await createTeacher(values).then((res) => res.data);
     form.reset();
 
     toast("Teacher saved", {

@@ -40,10 +40,8 @@ const AdminForm = ($: {
     },
   });
 
-  const submit = form.handleSubmit(async (values: any) => {
-    let res: Admin;
-
-    res = await createAdmin(values).then((res) => res.data);
+  const submit = form.handleSubmit(async (values) => {
+    const res: Admin = await createAdmin(values).then((res) => res.data);
 
     toast("Admin saved", {
       icon: <Check color="green" />,

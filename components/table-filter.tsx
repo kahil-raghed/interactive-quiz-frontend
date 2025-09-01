@@ -1,6 +1,6 @@
 "use client";
 
-import { Control, useFormContext, UseFormSetValue } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   FormField,
   FormItem,
@@ -22,14 +22,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "./ui/button";
 
 // Define types for filter configuration
 type FilterType = "text" | "select" | "date";
 
 export interface FilterField {
   name: string;
-label: string;
+  label: string;
   type: FilterType;
   options?: { value: string; label: string }[]; // For select fields
   placeholder?: string;

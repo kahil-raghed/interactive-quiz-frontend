@@ -5,7 +5,7 @@ import { DataTable } from "../../../../components/data-table";
 import { Course } from "../../../../types/course";
 import { Group } from "../../../../types/group";
 import { useMemo } from "react";
-import { useCourseById } from "../../../../query/course";
+// import { useCourseById } from "../../../../query/course";
 import { useParams } from "next/navigation";
 import { useGroups } from "../../../../query/group";
 import { Button } from "../../../../components/ui/button";
@@ -15,7 +15,7 @@ export default function CoursePageClient($: {
   groups?: Group[];
 }) {
   const { id } = useParams();
-  const { data: course } = useCourseById(id as string, $.course);
+  // const { data: course } = useCourseById(id as string, $.course);
   const { data: groups, isLoading } = useGroups(
     {
       course: id as string,
@@ -37,7 +37,7 @@ export default function CoursePageClient($: {
       h.display({
         header: "Actions",
         id: "actions",
-        cell: (c) => (
+        cell: () => (
           <div className="flex gap-2">
             <Button>View</Button>
             <button>Delete</button>

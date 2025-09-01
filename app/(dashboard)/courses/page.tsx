@@ -19,9 +19,11 @@ import { Edit, Trash } from "lucide-react";
 import { isAdmin } from "@/lib/token";
 import { TableFilter } from "@/components/table-filter";
 import { FormProvider, useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Courses() {
   const form = useForm();
+  const queryClient = useQueryClient();
   const { data, isLoading } = useCourses(form.watch());
   const [admin, setAdmin] = useState(false);
   const [courseDialog, setCourseDialog] = useState<{
@@ -41,9 +43,13 @@ export default function Courses() {
       deleting.current.add(id);
       deleteCourse(id).finally(() => {
         deleting.current.delete(id);
+
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "courses",
+        });
       });
     },
-    [deleteCourse]
+    [deleteCourse, queryClient]
   );
 
   const columns = useMemo(() => {
@@ -97,7 +103,7 @@ export default function Courses() {
         ),
       }),
     ];
-  }, [deleting]);
+  }, [deleting, admin, deleteCourseFn]);
 
   return (
     <FormProvider {...form}>

@@ -2,30 +2,21 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   BookMarked,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal,
   UserPlus,
   Group,
+  Sigma,
+  ClipboardCheck,
 } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
@@ -48,6 +39,11 @@ const data = {
       icon: BookMarked,
     },
     {
+      name: "Quizzes",
+      url: "/quizzes",
+      icon: Sigma,
+    },
+    {
       name: "Students",
       url: "/students",
       icon: PieChart,
@@ -61,6 +57,11 @@ const data = {
       name: "Group",
       url: "/groups",
       icon: Group,
+    },
+    {
+      name: "Questions",
+      url: "/add-question",
+      icon: ClipboardCheck,
     },
   ],
 };

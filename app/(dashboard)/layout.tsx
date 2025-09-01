@@ -30,7 +30,9 @@ export default function MainLayout($: PropsWithChildren) {
       ) {
         router.replace("login");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }, [router]);
 
   return (

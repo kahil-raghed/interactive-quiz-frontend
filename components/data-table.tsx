@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { forwardRef, Ref, useCallback } from "react";
+import React, { Ref, useCallback } from "react";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 
@@ -72,7 +72,7 @@ export const DataTable = <TData,>({
     } else if (tableRef) {
       (tableRef as React.MutableRefObject<TanTable<TData>>).current = table;
     }
-  }, [table]);
+  }, [table, tableRef]);
 
   return (
     <div>

@@ -3,7 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAssignStudents, useGroup, useRemoveStudents } from "@/query/group";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Controller, useForm } from "react-hook-form";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useStudents } from "@/query/student";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const formSchema = z.object({
   studentIds: z
@@ -23,7 +23,7 @@ const formSchema = z.object({
 
 const Group = () => {
   const { id } = useParams();
-  const router = useRouter();
+  // const router = useRouter();
   const { data: students } = useStudents();
   const { data: group, isLoading: isGroup } = useGroup(id as string);
 
@@ -53,7 +53,7 @@ const Group = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
-        <p className="text-2xl">Group's Students ({group?.name})</p>
+        <p className="text-2xl">Group&apos;s Students ({group?.name})</p>
         <p>Students</p>
         <div className="flex flex-wrap gap-2">
           {group?.students.map((student, idx) => (
@@ -85,7 +85,7 @@ const Group = () => {
                     })) ?? []
                   }
                   defaultValue={field.value || []}
-                  onValueChange={(value: any) => field.onChange(value)}
+                  onValueChange={(value) => field.onChange(value)}
                 />
               )}
             />
@@ -103,7 +103,7 @@ const Group = () => {
                     })) ?? []
                   }
                   defaultValue={field.value || []}
-                  onValueChange={(value: any) => field.onChange(value)}
+                  onValueChange={(value) => field.onChange(value)}
                 />
               )}
             />

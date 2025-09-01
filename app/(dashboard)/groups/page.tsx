@@ -18,9 +18,11 @@ import { GroupForm } from "./_components/group-form";
 import { TableFilter } from "@/components/table-filter";
 import { FormProvider, useForm } from "react-hook-form";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Groups() {
   const form = useForm<GroupQuery>();
+  const queryClient = useQueryClient();
   const { data } = useGroups(form.watch());
 
   const { mutateAsync: deleteGroup } = useDeleteGroupMutation();
@@ -32,13 +34,16 @@ export default function Groups() {
   const deleting = useRef(new Set<string>());
   const deleteGroupFn = useCallback(
     (id: string) => {
-      0;
       deleting.current.add(id);
       deleteGroup(id).finally(() => {
         deleting.current.delete(id);
+
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "groups",
+        });
       });
     },
-    [deleteGroup]
+    [deleteGroup, queryClient]
   );
 
   const columns = useMemo(() => {
@@ -94,7 +99,7 @@ export default function Groups() {
         ),
       }),
     ];
-  }, [deleting]);
+  }, [deleting, deleteGroupFn]);
 
   return (
     <FormProvider {...form}>

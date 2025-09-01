@@ -49,16 +49,15 @@ export const GroupForm = ($: {
     },
   });
 
-  const isNew = !$.group?._id;
+  const submit = form.handleSubmit(async (values) => {
+    let res;
 
-  const submit = form.handleSubmit(async (values: any) => {
-    let res: Pick<Group, "name" | "course" | "students" | "teacher">;
-
-    if (isNew) {
+    if (!$.group?._id) {
+      // @ts-expect-error ts(2349)
       res = await createGroup(values).then((res) => res.data);
       form.reset();
     } else {
-      res = await updateGroup($.group?._id!, values).then((res) => res.data);
+      res = await updateGroup($.group?._id, values).then((res) => res.data);
     }
 
     toast("Group saved", {

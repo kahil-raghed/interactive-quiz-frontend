@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 import { Course } from "../../../../types/course";
 import {
   Form,
-  FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,7 +11,7 @@ import {
 } from "../../../../components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
+// import { useCallback } from "react";
 import { Input } from "../../../../components/ui/input";
 import {
   Select,
@@ -31,7 +29,7 @@ import { Check } from "lucide-react";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   year: z.string().min(1, { message: "Year is required" }),
-  semester: z.string().optional(),
+  semester: z.string(),
 });
 
 export const CourseForm = ($: {
@@ -49,15 +47,13 @@ export const CourseForm = ($: {
   });
   const queryClient = useQueryClient();
 
-  const isNew = !$.course?._id;
-
   const submit = form.handleSubmit(async (values) => {
     let res: Course;
-    if (isNew) {
+    if (!$.course?._id) {
       res = await createCourse(values).then((res) => res.data);
       form.reset();
     } else {
-      res = await updateCourse($.course?._id!, values).then((res) => res.data);
+      res = await updateCourse($.course?._id, values).then((res) => res.data);
     }
 
     toast("Course saved", {

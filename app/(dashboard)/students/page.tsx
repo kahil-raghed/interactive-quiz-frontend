@@ -10,7 +10,6 @@ import { Edit, Trash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -20,9 +19,11 @@ import { StudentForm } from "./_components/student-form";
 import { Student } from "@/types/student";
 import { TableFilter } from "@/components/table-filter";
 import { FormProvider, useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function StudentsPage() {
   const form = useForm();
+  const queryClient = useQueryClient();
   const { data, isLoading } = useStudents();
   const [studentDialog, setStudentDialog] = useState<{
     open: boolean;
@@ -35,9 +36,13 @@ export default function StudentsPage() {
       deleting.current.add(id);
       deleteStudent(id).finally(() => {
         deleting.current.delete(id);
+
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "students",
+        });
       });
     },
-    [deleteStudent]
+    [queryClient]
   );
 
   const columns = useMemo(() => {
@@ -87,7 +92,7 @@ export default function StudentsPage() {
         ),
       }),
     ];
-  }, [deleting]);
+  }, [deleting, deleteCourseFn]);
 
   return (
     <FormProvider {...form}>

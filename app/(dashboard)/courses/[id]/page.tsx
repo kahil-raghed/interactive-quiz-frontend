@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { findCourse, getCourseById } from "../../../../api/course";
-import { DataTable } from "../../../../components/data-table";
+import { getCourseById } from "../../../../api/course";
+// import { DataTable } from "../../../../components/data-table";
 import CoursePageClient from "./client";
-import { findGroup } from "../../../../api/group";
+// import { findGroup } from "../../../../api/group";
 
 export default async function CoursePage($: {
   params: Promise<{ id: string }>;
@@ -13,8 +13,8 @@ export default async function CoursePage($: {
     .then((res) => res.data)
     .catch(() => notFound());
 
-  const groups = await findGroup({ course: course._id })
-    .then((res) => res.data);
+  // const groups = await findGroup({ course_ID: course._id })
+  //   .then((res) => res.data);
 
   return (
     <div>

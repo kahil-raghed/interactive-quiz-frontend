@@ -50,19 +50,15 @@ export const StudentForm = ($: {
   });
   const queryClient = useQueryClient();
 
-  const isNew = !$.student?._id;
-
   const submit = form.handleSubmit(async (values) => {
     let res: Student;
-    if (isNew) {
+    if (!$.student?._id) {
       res = await createStudent({ ...values, userType: "student" }).then(
         (res) => res.data
       );
       form.reset();
     } else {
-      res = await updateStudent($.student?._id!, values).then(
-        (res) => res.data
-      );
+      res = await updateStudent($.student?._id, values).then((res) => res.data);
     }
 
     toast("Course saved", {

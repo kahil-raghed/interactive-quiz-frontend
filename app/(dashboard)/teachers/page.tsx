@@ -18,9 +18,11 @@ import { TeacherForm } from "./_components/teacher-form";
 import { isAdmin } from "@/lib/token";
 import { TableFilter } from "@/components/table-filter";
 import { FormProvider, useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Teachers() {
   const form = useForm();
+  const queryClient = useQueryClient();
   const { data } = useTeachers(form.watch());
   const [isAdminUser, setIsAdminUser] = useState(false);
   const { mutateAsync: deleteTeacher } = useDeleteTeacherMutation();
@@ -40,9 +42,13 @@ export default function Teachers() {
       deleting.current.add(id);
       deleteTeacher(id).finally(() => {
         deleting.current.delete(id);
+
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "teachers",
+        });
       });
     },
-    [deleteTeacher]
+    [deleteTeacher, queryClient]
   );
 
   const columns = useMemo(() => {
@@ -75,7 +81,7 @@ export default function Teachers() {
         ),
       }),
     ];
-  }, [deleting, isAdminUser]); // Add isAdminUser to dependencies
+  }, [deleting, isAdminUser, deleteTeacherFn]); // Add isAdminUser to dependencies
 
   return (
     <FormProvider {...form}>

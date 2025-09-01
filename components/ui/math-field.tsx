@@ -10,7 +10,6 @@ import { MathfieldElement } from "mathlive";
 
 function MathField({
   className,
-  type,
   ...props
 }: React.ComponentProps<"math-field">) {
   const innerId = React.useId();

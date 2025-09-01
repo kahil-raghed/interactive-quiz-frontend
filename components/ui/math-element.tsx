@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo } from "react";
+import { useId, useMemo } from "react";
 import { cn } from "../../lib/utils";
 import { convertLatexToMarkup } from "mathlive";
 
@@ -14,9 +14,10 @@ export function MathElement({
 
   const id = propsId || innerId;
 
-  const mathMarkup = useMemo(() => convertLatexToMarkup(math ?? "", {
-    
-  }), [math]);
+  const mathMarkup = useMemo(
+    () => convertLatexToMarkup(math ?? "", {}),
+    [math]
+  );
 
   return (
     <div
