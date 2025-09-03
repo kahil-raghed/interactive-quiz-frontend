@@ -33,7 +33,7 @@ import { useLoginMutation } from "@/query/login";
 // Schema for form validation
 const loginSchema = z.object({
   email: z.string().email("Invalid email").min(1, "Email is required"),
-  password: z.string().length(5, "Password must be 5 characters"),
+  password: z.string(),
   role: z.enum(["student", "teachers", "admin"]),
   rememberMe: z.boolean().optional(),
 });

@@ -28,3 +28,12 @@ export const updateQuiz = (
 
 export const deleteQuiz = (id: string, req?: AxiosRequestConfig) =>
   axiosInstance.delete(`${ApiBase}/api/v1/quiz/${id}`, req);
+
+export const accessQuiz = (accessCode: string, req?: AxiosRequestConfig) =>
+  axiosInstance.post<Quiz>(`${ApiBase}/api/v1/student/access-quiz`, {
+    accessCode,
+  }, req);
+
+export const submitQuiz = (payload: {
+  answers: Record<string, string>,
+}, req?: AxiosRequestConfig) => axiosInstance.post(`${ApiBase}/api/v1/student/submit-quiz`, payload, req);

@@ -1,12 +1,12 @@
 import { AxiosRequestConfig } from "axios";
 import { axiosInstance } from "./axios";
 import { ApiBase } from "@/config/api";
-import { Quistions } from "@/types/question";
+import { Quistion } from "@/types/question";
 
 export const createQuestion = (
   data: {
     questions: Pick<
-      Quistions,
+      Quistion,
       "text" | "type" | "choices" | "points" | "isMath" | "isMultiTrue"
     >[];
   } & { quizId: string },

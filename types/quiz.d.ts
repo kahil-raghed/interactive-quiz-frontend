@@ -1,11 +1,11 @@
 import { BaseEntity } from "./base";
 import { Course } from "./course";
 import { Group } from "./group";
-import { Quistions } from "./question";
+import { Quistion } from "./question";
 
 export interface Quiz extends BaseEntity {
   group: Group;
-  questions: Quistions[];
+  questions: Quistion[];
   scheduledAt: Date | string;
   accessCode: string;
   isOver: boolean;

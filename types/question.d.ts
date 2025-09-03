@@ -3,7 +3,8 @@ export interface Choices {
   isCorrect: boolean;
 }
 
-export interface Quistions {
+export interface Quistion {
+  _id: string;
   text: string;
   isMath: boolean;
   type: string;
