@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import { HelpCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import EDate from "@/lib/date";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const QuizPage = () => {
   const { id } = useParams();
@@ -40,6 +42,9 @@ const QuizPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-8">
+        <Button className="float-end" asChild>
+          <Link href={`/quizzes/${data._id}/answers`}>Show answers</Link>
+        </Button>
         <Card className="w-full">
           <CardHeader className="text-center">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

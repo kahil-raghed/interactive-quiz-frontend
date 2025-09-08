@@ -9,6 +9,7 @@ import {
   Group,
   Sigma,
   ClipboardCheck,
+  FileQuestion,
 } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
@@ -66,6 +67,11 @@ const data = {
       name: "Questions",
       url: "/add-question",
       icon: ClipboardCheck,
+    },
+    {
+      name: "Access quiz",
+      url: "/access-quiz",
+      icon: FileQuestion,
     },
   ],
 };
