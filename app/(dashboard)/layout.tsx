@@ -15,11 +15,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { PropsWithChildren, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { parseJwt } from "@/lib/token";
 
 export default function MainLayout($: PropsWithChildren) {
   const router = useRouter();
+  const paths = usePathname();
+
+  console.log(paths.split("/"));
 
   useEffect(() => {
     try {
@@ -48,15 +51,22 @@ export default function MainLayout($: PropsWithChildren) {
             />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
+                {paths
+                  .split("/")
+                  .slice(1)
+                  .map((path) => (
+                    <>
+                      <BreadcrumbItem className="hidden md:block">
+                        <BreadcrumbLink href={path}>{path}</BreadcrumbLink>
+                      </BreadcrumbItem>
+
+                      <BreadcrumbSeparator className="hidden md:block" />
+                    </>
+                  ))}
+
+                {/* <BreadcrumbItem>
                   <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                </BreadcrumbItem> */}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

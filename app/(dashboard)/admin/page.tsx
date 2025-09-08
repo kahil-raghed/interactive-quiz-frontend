@@ -16,6 +16,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import AdminForm from "./_components/admin-form";
 import { Admin, AdminQuery } from "@/types/admin";
 import { useAdmin } from "@/query/admin";
+import { isAdmin } from "@/lib/token";
 
 export default function Page() {
   const form = useForm<AdminQuery>();
@@ -39,6 +40,8 @@ export default function Page() {
       }),
     ];
   }, []);
+
+  if (!isAdmin()) return <p className="m-auto">You&#39;re Not Allowed</p>;
 
   return (
     <FormProvider {...form}>

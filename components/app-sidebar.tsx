@@ -19,12 +19,16 @@ import {
   SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { parseJwt } from "@/lib/token";
+
+const { email } = parseJwt(localStorage.getItem("token")!);
 
 // This is sample data.
 const data = {
   user: {
     name: "Raghed",
-    email: "m@example.com",
+    // email: "m@example.com",
+    email,
     avatar: "/avatars/shadcn.jpg",
   },
   projects: [
